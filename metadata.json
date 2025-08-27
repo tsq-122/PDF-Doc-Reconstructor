@@ -1,0 +1,5 @@
+{
+  "name": "PDF Document Reconstructor v8.1",
+  "description": "An application that parses a PDF file and visually reconstructs the layout of the first page from its text data onto an HTML5 canvas.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,350 @@
+:root {
+  --primary-color: #007bff;
+  --primary-hover-color: #0056b3;
+  --background-color: #f4f7f9;
+  --text-color: #333;
+  --container-bg-color: #ffffff;
+  --border-color: #dee2e6;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --border-radius: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  max-width: 95vw;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem 0;
+}
+
+h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: #555;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+h3 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    color: #444;
+}
+
+#control-panel h3 {
+    margin-top: 1rem; /* Add space above section headers */
+}
+
+p {
+    color: #666;
+}
+
+.upload-container {
+  margin-bottom: 1.5rem;
+}
+
+.upload-label {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  font-weight: 500;
+  box-shadow: var(--box-shadow);
+}
+
+.upload-label:hover,
+.upload-label:focus {
+  background-color: var(--primary-hover-color);
+}
+
+#pdf-upload {
+  display: none;
+}
+
+#loading-indicator {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 2rem;
+}
+
+.content-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.5rem;
+  width: 100%;
+  visibility: hidden;
+}
+
+#canvas-container, 
+#control-panel,
+#analysis-panel {
+  background-color: var(--container-bg-color);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
+  transition: flex-basis 0.3s ease-in-out;
+}
+
+#canvas-container {
+  flex: 1;
+  min-width: 0; /* Fix flexbox shrinking issue */
+  cursor: pointer; /* Indicate that the canvas is interactive */
+}
+
+#control-panel {
+  flex: 0 0 240px;
+}
+
+#analysis-panel {
+  flex: 1;
+  padding: 1rem;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Fix flexbox shrinking issue */
+  overflow: auto; /* Make panel scrollable for large canvas */
+}
+
+#reconstruction-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background-color: var(--container-bg-color);
+}
+
+#text-output-canvas {
+  /* The canvas will be sized by the script based on content */
+  background-color: #fff;
+}
+
+
+/* --- Control Panel Styles --- */
+.control-group {
+    margin-bottom: 1.5rem;
+}
+
+.control-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+input[type="range"] {
+    width: 100%;
+    cursor: pointer;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.checkbox-group input {
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+.checkbox-group label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+#manual-controls-fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+#manual-controls-fieldset:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+
+/* --- Import/Export Actions --- */
+.control-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    text-align: center;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.action-btn:hover {
+    background-color: #5a6268;
+}
+
+/* --- Group Details Styles --- */
+.details-toggle-link {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.details-toggle-link:hover {
+    text-decoration: underline;
+}
+
+#group-details-container {
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+}
+
+#group-details-output {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 0.5rem;
+    font-family: monospace;
+    font-size: 0.75rem;
+    max-height: 300px;
+    overflow-y: auto;
+    white-space: pre;
+    word-wrap: normal;
+}
+
+/* --- Text Panel Header and Expand --- */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.panel-header h2 {
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+.panel-header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.panel-header .action-btn {
+  flex: 0 0 auto; /* Don't grow */
+  padding: 0.25rem 0.75rem;
+}
+
+#analysis-panel.expanded {
+  flex-basis: 100%;
+}
+
+.hidden-by-expand {
+  display: none !important;
+}
+
+/* --- Gemini Dialog Styles --- */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: none; /* Hidden by default */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog-overlay.is-visible {
+  display: flex; /* Show the dialog */
+}
+
+.dialog-box {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.dialog-header h2 {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dialog-close-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: #888;
+  line-height: 1;
+}
+.dialog-close-btn:hover {
+  color: #333;
+}
+
+.dialog-content {
+  overflow-y: auto;
+  white-space: pre-wrap; /* Allows text to wrap */
+  word-wrap: break-word; /* Breaks long words */
+  font-family: monospace;
+}

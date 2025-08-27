@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Document Reconstructor</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <script src="https://unpkg.com/pdfjs-dist@4.4.168/build/pdf.min.mjs" type="module"></script>
+<script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.15.0"
+  }
+}
+</script>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>PDF Document Reconstructor</h1>
+      <p>Upload a PDF to visually reconstruct its first page and view the extracted text.</p>
+    </header>
+    <div class="upload-container">
+      <label for="pdf-upload" class="upload-label" role="button" aria-controls="pdf-upload">Choose PDF File</label>
+      <input type="file" id="pdf-upload" accept=".pdf" hidden>
+    </div>
+    <div id="loading-indicator" hidden>Reconstructing...</div>
+    <div class="content-wrapper">
+      <div id="canvas-container">
+        <canvas id="reconstruction-canvas">
+          <!-- The reconstructed PDF page will be drawn here -->
+        </canvas>
+      </div>
+      <aside id="control-panel">
+        <h2>Controls</h2>
+        <div class="control-group">
+            <h3>Rendition Mode</h3>
+            <div class="checkbox-group">
+              <input type="radio" id="mode-auto" name="rendition-mode" value="automatic" checked>
+              <label for="mode-auto">Automatic</label>
+            </div>
+            <div class="checkbox-group">
+              <input type="radio" id="mode-manual" name="rendition-mode" value="manual">
+              <label for="mode-manual">Manual (uses block grouping)</label>
+            </div>
+        </div>
+        <fieldset id="manual-controls-fieldset" disabled>
+          <div class="control-group">
+              <h3>Vertical Block Grouping</h3>
+              <label for="horizontal-tolerance-slider">Horizontal Tolerance: <span id="horizontal-tolerance-value">10</span></label>
+              <input type="range" id="horizontal-tolerance-slider" min="0" max="50" value="10" step="1">
+
+              <label for="vertical-proximity-slider">Vertical Proximity: <span id="vertical-proximity-value">10</span></label>
+              <input type="range" id="vertical-proximity-slider" min="0" max="50" value="10" step="1">
+          </div>
+          <div class="control-group">
+              <h3>Label-Value Grouping</h3>
+              <label for="y-axis-tolerance-slider">Y-Axis Tolerance: <span id="y-axis-tolerance-value">5</span></label>
+              <input type="range" id="y-axis-tolerance-slider" min="0" max="20" value="5" step="1">
+          </div>
+          <div class="control-group">
+              <h3>Title Detection</h3>
+              <label for="title-ratio-slider">Font Size Ratio (x Median): <span id="title-ratio-value">2</span></label>
+              <input type="range" id="title-ratio-slider" min="1.1" max="3.0" value="2" step="0.1">
+          </div>
+        </fieldset>
+        <div class="control-group">
+            <h3>Visualization</h3>
+            <div class="checkbox-group">
+              <input type="checkbox" id="show-item-boxes" checked>
+              <label for="show-item-boxes">Show Item Boxes</label>
+            </div>
+             <div class="checkbox-group">
+              <input type="checkbox" id="show-block-boxes" checked>
+              <label for="show-block-boxes">Show Block Boxes</label>
+            </div>
+            <div class="checkbox-group">
+              <input type="checkbox" id="show-label-value-boxes" checked>
+              <label for="show-label-value-boxes">Show Label-Value Groups</label>
+            </div>
+            <div class="checkbox-group">
+              <input type="checkbox" id="show-titles" checked>
+              <label for="show-titles">Show Titles</label>
+            </div>
+        </div>
+        <div class="control-group control-actions">
+            <button id="export-settings-btn" class="action-btn">Export Settings</button>
+            <label for="import-settings-input" class="action-btn" role="button">Import Settings</label>
+            <input type="file" id="import-settings-input" accept=".json" hidden>
+        </div>
+        <a href="#" id="toggle-group-details" class="details-toggle-link">Show Group Details</a>
+        <div class="control-group" id="group-details-container" hidden>
+            <h3>Group Details</h3>
+            <pre id="group-details-output"></pre>
+        </div>
+      </aside>
+      <div id="analysis-panel">
+        <div class="panel-header">
+          <h2>Text Rendition</h2>
+          <div class="panel-header-actions">
+            <button id="gemini-analyze-btn" class="action-btn">Analyze with Gemini</button>
+            <button id="expand-text-btn" class="action-btn">Expand</button>
+          </div>
+        </div>
+        <canvas id="text-output-canvas"></canvas>
+      </div>
+    </div>
+  </main>
+  <div id="gemini-dialog-overlay" class="dialog-overlay">
+    <div id="gemini-dialog" class="dialog-box">
+      <div class="dialog-header">
+        <h2>Gemini Analysis</h2>
+        <button id="gemini-dialog-close-btn" class="dialog-close-btn" aria-label="Close dialog">&times;</button>
+      </div>
+      <div id="gemini-dialog-content" class="dialog-content">
+        <!-- Gemini response will be injected here -->
+      </div>
+    </div>
+  </div>
+  <script type="module" src="index.tsx"></script>
+</body>
+</html>
