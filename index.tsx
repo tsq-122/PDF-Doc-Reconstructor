@@ -21,10 +21,13 @@ const groupDetailsContainer = document.getElementById('group-details-container')
 const groupDetailsOutputEl = document.getElementById('group-details-output') as HTMLPreElement;
 const toggleGroupDetailsLink = document.getElementById('toggle-group-details') as HTMLAnchorElement;
 
+const copyTextBtn = document.getElementById('copy-text-btn') as HTMLButtonElement;
 const geminiAnalyzeBtn = document.getElementById('gemini-analyze-btn') as HTMLButtonElement;
 const geminiDialogOverlay = document.getElementById('gemini-dialog-overlay') as HTMLDivElement;
 const geminiDialogContent = document.getElementById('gemini-dialog-content') as HTMLDivElement;
 const geminiDialogCloseBtn = document.getElementById('gemini-dialog-close-btn') as HTMLButtonElement;
+const copyGeminiBtn = document.getElementById('copy-gemini-btn') as HTMLButtonElement;
+
 
 const context = canvas.getContext('2d')!;
 
@@ -156,7 +159,8 @@ expandTextBtn.addEventListener('click', () => {
     }
 });
 
-// Gemini Analysis
+// Gemini Analysis and Copy
+copyTextBtn.addEventListener('click', handleCopyTextRendition);
 geminiAnalyzeBtn.addEventListener('click', handleAnalyzeWithGemini);
 geminiDialogCloseBtn.addEventListener('click', () => geminiDialogOverlay.classList.remove('is-visible'));
 geminiDialogOverlay.addEventListener('click', (e) => {
@@ -164,6 +168,7 @@ geminiDialogOverlay.addEventListener('click', (e) => {
     geminiDialogOverlay.classList.remove('is-visible');
   }
 });
+copyGeminiBtn.addEventListener('click', handleCopyGeminiResponse);
 
 
 // --- Main Functions ---
@@ -191,6 +196,7 @@ async function handleFileSelect(event: Event) {
       await processPdf(typedarray);
       drawReconstruction(); // Initial draw
       contentWrapper.style.visibility = 'visible';
+      copyTextBtn.disabled = false;
       showLoading(false);
     };
     fileReader.readAsArrayBuffer(file);
@@ -1026,6 +1032,48 @@ async function handleAnalyzeWithGemini() {
         console.error('Gemini API call failed:', error);
         geminiDialogContent.textContent = `Error: Could not get a response from the API.\n\n${error.message || error}`;
     }
+}
+
+function handleCopyTextRendition() {
+    if (lastRenderedLines.length === 0) return;
+
+    const textToCopy = convertLinesToString(lastRenderedLines);
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = copyTextBtn.textContent;
+        copyTextBtn.textContent = 'Copied!';
+        copyTextBtn.classList.add('copied');
+        copyTextBtn.disabled = true;
+
+        setTimeout(() => {
+            copyTextBtn.textContent = originalText;
+            copyTextBtn.classList.remove('copied');
+            copyTextBtn.disabled = false;
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+        alert('Could not copy text to clipboard.');
+    });
+}
+
+function handleCopyGeminiResponse() {
+    const textToCopy = geminiDialogContent.textContent;
+    if (!textToCopy || textToCopy.trim() === '' || textToCopy.trim() === 'Analyzing...') return;
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = copyGeminiBtn.textContent;
+        copyGeminiBtn.textContent = 'Copied!';
+        copyGeminiBtn.classList.add('copied');
+        copyGeminiBtn.disabled = true;
+
+        setTimeout(() => {
+            copyGeminiBtn.textContent = originalText;
+            copyGeminiBtn.classList.remove('copied');
+            copyGeminiBtn.disabled = false;
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy Gemini response: ', err);
+        alert('Could not copy text to clipboard.');
+    });
 }
 
 

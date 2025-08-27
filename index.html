@@ -99,6 +99,7 @@
         <div class="panel-header">
           <h2>Text Rendition</h2>
           <div class="panel-header-actions">
+            <button id="copy-text-btn" class="action-btn" disabled>Copy</button>
             <button id="gemini-analyze-btn" class="action-btn">Analyze with Gemini</button>
             <button id="expand-text-btn" class="action-btn">Expand</button>
           </div>
@@ -115,6 +116,9 @@
       </div>
       <div id="gemini-dialog-content" class="dialog-content">
         <!-- Gemini response will be injected here -->
+      </div>
+      <div class="dialog-footer">
+        <button id="copy-gemini-btn" class="action-btn">Copy</button>
       </div>
     </div>
   </div>

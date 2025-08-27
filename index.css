@@ -220,6 +220,15 @@ input[type="range"] {
     background-color: #5a6268;
 }
 
+.action-btn.copied {
+    background-color: #28a745;
+    cursor: default;
+}
+.action-btn.copied:hover {
+    background-color: #28a745;
+}
+
+
 /* --- Group Details Styles --- */
 .details-toggle-link {
     display: block;
@@ -347,4 +356,16 @@ input[type="range"] {
   white-space: pre-wrap; /* Allows text to wrap */
   word-wrap: break-word; /* Breaks long words */
   font-family: monospace;
+}
+
+.dialog-footer {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dialog-footer .action-btn {
+    padding: 0.5rem 1.5rem;
 }
